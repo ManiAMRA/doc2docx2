@@ -1,0 +1,47 @@
+Open Excel and press Alt + F11 to open the Visual Basic for Applications (VBA) editor.
+
+On the left side of the code editor, double click on ThisWorkBook. Copy paste the following code
+
+Sub ConvertDocToDocx()
+    Dim FolderPath As String
+    Dim FileName As String
+    Dim docFile As Object
+    Dim docApp As Object
+    
+    ' Specify the folder path where the .doc files are located
+    FolderPath = Application.ActiveWorkbook.Path & "\"
+    
+   
+    ' Create a new instance of Microsoft Word application
+    Set WordApp = CreateObject("Word.Application")
+    
+    ' Disable Word Application alerts (e.g., conversion prompt)
+    WordApp.DisplayAlerts = False
+    
+
+    
+    ' Loop through each file in the folder
+    FileName = Dir(FolderPath & "*.doc")
+    Do While FileName <> ""
+        If Right(FileName, 4) = ".doc" Then ' Check if the file is a .doc file
+            ' Open the .doc file
+            Set WordDoc = WordApp.Documents.Open(FolderPath & FileName)
+            
+            ' Save as .docx format
+            WordDoc.SaveAs2 FolderPath & Left(FileName, Len(FileName) - 4) & ".docx", 16 ' wdFormatDocumentDefault
+            
+            ' Close the file
+            WordDoc.Close
+        End If
+        
+        ' Move to the next file
+        FileName = Dir
+    Loop
+    
+    MsgBox "Conversion completed!"
+End Sub
+
+Take a backup of the doc files and save this excel to the directory where the doc files are available.
+
+Run the macro by pressing F5 or by clicking on the Play button in the VBA editor.
+
